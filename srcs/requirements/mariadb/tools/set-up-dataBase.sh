@@ -4,11 +4,11 @@ set -a
 source /.env
 set +a
 
+mariadb-safe &
+
 echo "starting mariadb server .."
 
-service mariadb start
-
-until mysqladmin ping --silent; do
+until mariadbadmin ping --silent; do
     echo "waiting for mariadb .."
 done
 
