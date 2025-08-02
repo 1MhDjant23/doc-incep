@@ -4,12 +4,12 @@ set -a
 source /.env
 set +a
 
-mariadb-safe &
+mysqld_safe &
 
 echo "starting mariadb server .."
 
-until mariadbadmin ping --silent; do
-    echo "waiting for mariadb .."
+until mysqladmin ping --silent; do
+    echo "waiting.." > /dev/null
 done
 
 mysql -e "CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;"
@@ -24,4 +24,6 @@ echo "new user '${MYSQL_USER}' created with All privileges!"
 
 mysql -e "FLUSH PRIVILEGES;"
 
+mysqladmin shutdown
 
+exec mysqld_safe
