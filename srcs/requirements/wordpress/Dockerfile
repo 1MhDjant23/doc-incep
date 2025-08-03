@@ -16,4 +16,6 @@ RUN rm -rf latest.tar.gz
 
 WORKDIR /var/www/wordpress
 
-CMD [ "sleep", "infinity" ]
+# RUN cp wp-config-sample.php
+
+CMD [ "php-fpm8.4", "-F" ]
