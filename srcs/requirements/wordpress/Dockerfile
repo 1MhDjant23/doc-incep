@@ -1,12 +1,19 @@
 FROM ubuntu:plucky-20250714
 
-RUN apt-get update && apt-get upgrade && \
-    apt-get -y install wget && \
+RUN apt-get update && \
+    apt-get -y install php-fpm wget && \
     apt-get clean
 
-RUN wget https://wordpress.org/latest.tar.gz && \
-    tar -xzf latest.tar.gz && \
-    mv wordpress /var/www/wordpress && \
-    rm -rf latest.tar.gz
+RUN mkdir -p /var/www/wordpress
 
-WORKDIR /var/www/html
+RUN wget https://wordpress.org/latest.tar.gz
+
+RUN tar -xzf latest.tar.gz
+
+RUN mv wordpress /var/www/wordpress
+
+RUN rm -rf latest.tar.gz
+
+WORKDIR /var/www/wordpress
+
+CMD [ "sleep", "infinity" ]
