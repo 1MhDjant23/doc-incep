@@ -14,8 +14,14 @@ RUN mv wordpress /var/www/wordpress
 
 RUN rm -rf latest.tar.gz
 
-WORKDIR /var/www/wordpress
+COPY ./conf/wordPress-config.sh / 
 
-# RUN cp wp-config-sample.php
+RUN chmod +x /wordPress-config.sh
 
-CMD [ "php-fpm8.4", "-F" ]
+# WORKDIR /var/www/wordpress
+
+ENTRYPOINT [ "/wordPress-config.sh" ]
+# RUN cd wordpress && cp wp-config-sample.php wp-config.php && \
+#     sed -i 's/database_name_here/word_djant/' wp-config.php
+
+# CMD [ "php-fpm8.4", "-F" ]
