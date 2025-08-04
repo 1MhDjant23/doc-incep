@@ -12,6 +12,8 @@ COPY ./tools/set-up-dataBase.sh /set-up-dataBase.sh
 
 COPY .env /.env
 
+EXPOSE 3306
+
 RUN chmod 644 /etc/mysql/mariadb.conf.d/my.cnf && \
     chmod +x /set-up-dataBase.sh
 
