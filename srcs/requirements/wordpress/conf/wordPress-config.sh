@@ -1,7 +1,13 @@
 #!/bin/bash
 
-cd /var/www/wordpress/ && cp wp-config-sample.php wp-config.php && \
-    sed -i 's/password_here/niki_simo/' wp-config.php
+DIR="/var/www/wordpress"
+
+ cp ${DIR}/wp-config-sample.php ${DIR}/wp-config.php && \
+    sed -i 's/password_here/1234/' ${DIR}/wp-config.php
+    sed -i 's/database_name_here/wordpress/' ${DIR}/wp-config.php
+    sed -i 's/username_here/mait-taj/' ${DIR}/wp-config.php
+    sed -i 's/localhost/db/' ${DIR}/wp-config.php
+
 
 #   start PHP-FPM ON FOREGROUND #
 
