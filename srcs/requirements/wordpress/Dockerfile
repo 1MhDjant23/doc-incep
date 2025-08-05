@@ -1,18 +1,25 @@
 FROM ubuntu:plucky-20250714
 
 RUN apt-get update && \
-    apt-get -y install php-fpm php8.4-mysqli wget && \
+    apt-get -y install mariadb-client unzip less php-fpm php-cli curl php8.4-mysqli wget && \
     apt-get clean
 
 RUN mkdir -p /var/www/wordpress
 
 RUN wget https://wordpress.org/latest.tar.gz
 
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+
+RUN chmod +x wp-cli.phar 
+
+RUN mv wp-cli.phar /usr/local/bin/wp
+
 RUN tar -xzf latest.tar.gz
 
 RUN mv wordpress /var/www/
 
 RUN rm -rf latest.tar.gz
+
 
 COPY ./conf/wordPress-config.sh / 
 
