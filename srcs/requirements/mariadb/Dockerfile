@@ -10,7 +10,7 @@ COPY ./conf/my.cnf /etc/mysql/mariadb.conf.d/
 
 COPY ./tools/set-up-dataBase.sh /set-up-dataBase.sh
 
-COPY .env /.env
+# COPY .env /.env
 
 EXPOSE 3306
 

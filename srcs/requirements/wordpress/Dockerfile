@@ -15,7 +15,7 @@ RUN chmod +x wp-cli.phar && \
 
 RUN tar -xzf latest.tar.gz
 
-RUN mv wordpress /var/www/
+RUN mv wordpress/* /var/www/wordpress/
 
 RUN rm -rf latest.tar.gz
 
@@ -24,11 +24,11 @@ COPY ./conf/wordPress-config.sh /
 
 RUN chmod +x /wordPress-config.sh
 
-EXPOSE 8000:8000
+EXPOSE 9000:9000
 
-WORKDIR /
+WORKDIR /var/www/wordPress
 
-ENTRYPOINT [ "./wordPress-config.sh" ]
+ENTRYPOINT [ "/wordPress-config.sh" ]
 # RUN cd wordpress && cp wp-config-sample.php wp-config.php && \
 #     sed -i 's/database_name_here/word_djant/' wp-config.php
 

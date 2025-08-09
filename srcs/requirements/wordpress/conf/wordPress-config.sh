@@ -3,14 +3,14 @@
 DIR="/var/www/wordpress"
 
  cp ${DIR}/wp-config-sample.php ${DIR}/wp-config.php && \
-    sed -i 's/password_here/1234/' ${DIR}/wp-config.php
+    sed -i 's/password_here/simo1234/' ${DIR}/wp-config.php
     sed -i 's/database_name_here/wordpress/' ${DIR}/wp-config.php
-    sed -i 's/username_here/mait-taj/' ${DIR}/wp-config.php
-    sed -i 's/localhost/db/' ${DIR}/wp-config.php
+    sed -i 's/username_here/mait/' ${DIR}/wp-config.php
+    sed -i 's/localhost/mariadb/' ${DIR}/wp-config.php
 
 
 #   start PHP-FPM ON FOREGROUND #
-wp core install --url="http://localhost" --title="mait-taj Site" --admin_user="admin" --admin_password="1234" --admin_email="admin@example.com" --path=/var/www/wordpress --allow-root
+wp core install --url="http://localhost" --title="mait-taj Site" --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASS} --admin_email=${WP_ADMIN_EMAIL} --path=/var/www/wordpress --allow-root
 
 
 # wp user create mohamed mohamed@gmail.com --role=administrator --path=/var/www/wordpress --user_pass=1234 --allow-root
