@@ -1,5 +1,3 @@
-# version: '3.8'
-
 services:
   mariadb:
     build: ./requirements/mariadb
@@ -8,46 +6,52 @@ services:
     env_file:
       - .env
     networks:
-      - incep-net
+      - inception
     volumes:
       - db_data:/var/lib/mysql
   wordpress:
-    build: ./requirements/wordpress
     container_name: wordpress
-    restart: always
+    build: ./requirements/wordpress
     depends_on:
-      - mariadb
+      mariadb
+    restart: always
     env_file:
       - .env
     networks:
-      - incep-net
+      - inception
     volumes:
       - wp_data:/var/www/wordpress
   nginx:
     build: ./requirements/nginx
     container_name: nginx
     restart: always
-    depends_on:
-      - wordpress
     ports:
       - "443:443"
+    depends_on:
+      - wordpress
+    env_file:
+      - .env
     networks:
-      - incep-net
+      - inception
     volumes:
       - wp_data:/var/www/wordpress
-networks:
-  incep-net:
-    driver: bridge
+
 volumes:
-  db_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/mait-taj/data/mariadb
   wp_data:
+    name: wp_data
     driver: local
     driver_opts:
-      type: none
+      type: bind
       o: bind
-      device: /home/mait-taj/data/wordpress
+      device: "/home/mait-taj/data/wordpress"
+  db_data:
+    name: db_data
+    driver: local
+    driver_opts:
+      type: bind 
+      o: bind
+      device: "/home/mait-taj/data/mysql"
+networks:
+  inception:
+    name: inception
+    driver: bridge
