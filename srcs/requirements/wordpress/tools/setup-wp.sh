@@ -3,6 +3,8 @@
 DIR="/var/www/wordpress/"
 CONF="wp-config.php"
 
+sleep 5
+
 if [ ! -f "${DIR}/wp-load.php" ]; then
     echo "downloading Wordpress core files..."
     wp core download --path="${DIR}" --allow-root
@@ -13,17 +15,20 @@ if [ ! -f "${DIR}${CONF}" ]; then
     cp "${DIR}wp-config-sample.php" "${DIR}wp-config.php"
 fi
 sed -i "s/database_name_here/${SQL_DATABASE}/" "${DIR}${CONF}"
-sed -i "s/username_here/${SQL_USER}/" "${DIR}${CONF}"
-sed -i "s/password_here/${SQL_PASSWORD}/" "${DIR}${CONF}"
+sed -i "s/username_here/${WP_ADMIN_USER}/" "${DIR}${CONF}"
+sed -i "s/password_here/${WP_ADMIN_PASS}/" "${DIR}${CONF}"
 sed -i "s/localhost/${SQL_HOST}/" "${DIR}${CONF}"
 echo "wp-config.php updated with database credentials."
 
-if [ ! wp core is-installed --path=${DIR} --allow-root 2>/dev/null ];then
+# Change from Unix socket to TCP port
+sed -i 's|listen = /run/php/php8.2-fpm.sock|listen = 0.0.0.0:9000|' /etc/php/8.2/fpm/pool.d/www.conf
+
+if ! wp core is-installed --path="${DIR}" --allow-root 2>/dev/null; then
     echo "installing [ wordpress ]..."
     wp core install \
-    --url="https://${DOMAINE_NAME}" \
+    --url="$DOMAIN_NAME" \
     --path="${DIR}" \
-    --title="WP-TITLE" \
+    --title="$WP_TITLE" \
     --admin_user=${WP_ADMIN_USER} \
     --admin_password=${WP_ADMIN_PASS} \
     --admin_email=${WP_ADMIN_EMAIL} \

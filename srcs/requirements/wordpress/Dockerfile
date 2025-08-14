@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
 FROM debian:bookworm
 COPY --from=builder /wp /usr/local/bin/wp
 RUN apt-get update && apt-get install -y \
-    php php-mysql php-fpm mariadb-client ca-certificates && \
+    php php-mysql php-fpm default-mysql-client ca-certificates && \
     apt-get clean
 COPY ./tools/setup-wp.sh /
 RUN chmod +x /setup-wp.sh

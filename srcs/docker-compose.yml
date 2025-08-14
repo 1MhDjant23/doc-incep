@@ -9,11 +9,17 @@ services:
       - inception
     volumes:
       - db_data:/var/lib/mysql
+  adminer:
+    image: adminer
+    ports:
+      - 8000:8080
+    networks:
+      - inception
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
     depends_on:
-      mariadb
+      - mariadb
     restart: always
     env_file:
       - .env
