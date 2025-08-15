@@ -9,12 +9,6 @@ services:
       - inception
     volumes:
       - db_data:/var/lib/mysql
-  adminer:
-    image: adminer
-    ports:
-      - 8000:8080
-    networks:
-      - inception
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
@@ -44,14 +38,12 @@ services:
 
 volumes:
   wp_data:
-    name: wp_data
     driver: local
     driver_opts:
       type: bind
       o: bind
       device: "/home/mait-taj/data/wordpress"
   db_data:
-    name: db_data
     driver: local
     driver_opts:
       type: bind 

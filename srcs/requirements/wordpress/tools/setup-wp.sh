@@ -3,7 +3,10 @@
 DIR="/var/www/wordpress/"
 CONF="wp-config.php"
 
-sleep 5
+until mysql -h"$SQL_HOST" -P"3306" -u"$WP_ADMIN_USER" -p"$WP_ADMIN_PASS" -e "USE $SQL_DATABASE;" 2>/dev/null; do
+    echo "waiting for mariadb..." 
+    sleep 0.5
+done
 
 if [ ! -f "${DIR}/wp-load.php" ]; then
     echo "downloading Wordpress core files..."
@@ -33,8 +36,10 @@ if ! wp core is-installed --path="${DIR}" --allow-root 2>/dev/null; then
     --admin_password=${WP_ADMIN_PASS} \
     --admin_email=${WP_ADMIN_EMAIL} \
     --allow-root
+    echo "[ wordpress ] installed successfully!"
+    else
+        echo "[ wordpress ] already installed!"
 fi
-echo "[ wordpress ] installed successfully!"
 
 if ! wp user get "${WP_USER}" --path="${DIR}" --allow-root >/dev/null 2>&1; then
     wp user create "${WP_USER}" "${WP_USER_EMAIL}" \
@@ -44,6 +49,8 @@ if ! wp user get "${WP_USER}" --path="${DIR}" --allow-root >/dev/null 2>&1; then
         --allow-root
 echo "[ wordpress ] creating an ${WP_USER_ROLE} user '${WP_USER}'"
 fi
+
+# /set-pro-them.sh
 
 echo "running php-fpm on foreground..."
 
