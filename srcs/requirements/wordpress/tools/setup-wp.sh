@@ -23,7 +23,6 @@ sed -i "s/password_here/${WP_ADMIN_PASS}/" "${DIR}${CONF}"
 sed -i "s/localhost/${SQL_HOST}/" "${DIR}${CONF}"
 echo "wp-config.php updated with database credentials."
 
-# Change from Unix socket to TCP port
 sed -i 's|listen = /run/php/php8.2-fpm.sock|listen = 0.0.0.0:9000|' /etc/php/8.2/fpm/pool.d/www.conf
 
 if ! wp core is-installed --path="${DIR}" --allow-root 2>/dev/null; then
@@ -49,8 +48,6 @@ if ! wp user get "${WP_USER}" --path="${DIR}" --allow-root >/dev/null 2>&1; then
         --allow-root
 echo "[ wordpress ] creating an ${WP_USER_ROLE} user '${WP_USER}'"
 fi
-
-# /set-pro-them.sh
 
 echo "running php-fpm on foreground..."
 
