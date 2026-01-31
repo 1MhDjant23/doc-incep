@@ -54,8 +54,8 @@ Before running this project, ensure you have the following installed on your mac
 
 ### 1. Clone the Repository
 ```bash
-git clone git@github.com:username/inception-now.git
-cd inception-now
+git clone git@github.com:1MhDjant23/doc-incep.git
+cd doc-incep
 ```
 
 ### 2. Environment Setup
@@ -105,7 +105,7 @@ Then open your browser and visit: `https://mait-taj.42.fr` (Accept the self-sign
 ## 📂 Directory Structure
 
 ```plaintext
-inception-now/
+doc-incep/
 ├── Makefile                # Control center for building and starting services
 ├── README.md               # Project documentation
 └── srcs/                   # Source files
