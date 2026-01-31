@@ -1,33 +1,118 @@
-# Inception
+# Inception 🐳
 
-## What is this project?
+<p align="center">
+  <strong>System Administration & Dockerization Project</strong>
+</p>
 
-Inception is a project from the 42 Network curriculum.
-The goal is to learn how to use Docker to set up and manage multiple services inside isolated containers.
-This project helped me understand how to configure, connect, and secure different components of a web infrastructure.
+<p align="center">
+  <a href="#about-the-project">About</a> •
+  <a href="#system-architecture">Architecture</a> •
+  <a href="#prerequisites">Prerequisites</a> •
+  <a href="#installation--usage">Installation</a> •
+  <a href="#directory-structure">Structure</a>
+</p>
 
-## Main ideas
+---
 
-- **Docker**: A platform that lets you package and run applications in containers. Containers make your applications portable and consistent across different environments.
+## 📖 About the Project
 
-- **Containers**: Lightweight, isolated environments that keep each service separate so they don’t interfere with one another.
+**Inception** is a System Administration project from the 42 Network curriculum. The primary goal is to broaden usage and knowledge of **Docker** by building a small infrastructure of services using `docker-compose`.
 
-- **Docker Compose**: A tool that allows you to define and manage multiple containers easily using a single configuration file (docker-compose.yml).
+Instead of pulling ready-made images, this project requires building custom Docker images for each service (Nginx, WordPress, MariaDB) based on Alpine Linux or Debian, ensuring a deep understanding of system configuration and service isolation.
 
-- **Services**: The different applications that work together (web server, PHP processor, database, etc.).
+---
 
-- **Networks and Volumes**: Used to let containers communicate and to persist data even after containers are restarted.
+## 🏗 System Architecture
 
-## What i build?
+The project consists of three distinct isolated containers orchestrated by **Docker Compose**, running on a dedicated network (`inception`).
 
-I built and connected the following services — each running in its own container:
+| Service | Description | Details |
+| :--- | :--- | :--- |
+| **NGINX** | Web Server / Entry Point | • Acts as the only entry point (Port 443).<br>• Handles TSL/SSL security (HTTPS).<br>• Forwards PHP requests to the WordPress container. |
+| **WordPress** | Content Management System | • A WordPress instance running PHP-FPM.<br>• Does not include NGINX internally; relies on the external NGINX container.<br>• Connects to MariaDB for data storage. |
+| **MariaDB** | Database | • Relational database storing WordPress data.<br>• Isolated not accessible from the host directly, only via the internal network. |
 
-- **Nginx**: A web server that acts as a reverse proxy.
-  - Handles HTTPS connections using a self-signed TLS certificate for secure communication.
-  - Forwards PHP requests to the PHP-FPM container.
-- **WordPress** (with PHP-FPM):
-  - A WordPress site running with PHP-FPM (FastCGI Process Manager) to handle PHP execution.
-  - Communicates with the database through the internal Docker network.
-- **MariaDB**:
-  - A relational database used to store all WordPress data (posts, users, settings, etc.).
-  - Data is stored in a persistent Docker volume to ensure it is not lost when containers are rebuilt.
+### 💾 Data Persistence
+Data is stored continuously using Docker Volumes mounted to the host machine:
+- **WordPress Data**: Stored in `wp_data` volume.
+- **Database Data**: Stored in `db_data` volume.
+
+---
+
+## 🛠 Prerequisites
+
+Before running this project, ensure you have the following installed on your machine:
+
+- **OS**: Linux (Virtual Machine recommended)
+- **Docker Engine**: [Install Docker](https://docs.docker.com/engine/install/)
+- **Docker Compose**: [Install Compose](https://docs.docker.com/compose/install/)
+- **Make**: Standard build utility.
+
+---
+
+## 🚀 Installation & Usage
+
+### 1. Clone the Repository
+```bash
+git clone git@github.com:username/inception-now.git
+cd inception-now
+```
+
+### 2. Environment Setup
+The project works with a `.env` file located in `srcs/.env`.
+A default configuration is already included in the repository for ease of use.
+
+#### Environment Variables
+The following variables are configured in the `.env` file:
+- **Database**: `SQL_DATABASE`, `SQL_HOST`, `WP_ADMIN_USER`, `WP_ADMIN_PASS`
+- **WordPress Site**: `DOMAIN_NAME`, `WP_TITLE`, `WP_ADMIN_EMAIL`
+- **WordPress Users**: `WP_USER`, `WP_USER_EMAIL`, `WP_USER_ROLE`, `WP_USER_PASS`
+
+```bash
+# Verify the .env file exists
+ls srcs/.env
+```
+
+### 3. Build and Run
+> [!IMPORTANT]
+> If you encounter a `permission denied` error connecting to the Docker daemon sock, you can either:
+> 1. Run commands with `sudo` (e.g., `sudo make up`).
+> 2. Add your user to the docker group: `sudo usermod -aG docker $USER` (requires logout/login).
+
+Use `make` to manage the lifecycle of the application.
+
+
+| Command | Action |
+| :--- | :--- |
+| `make up` | Builds (if needed) and starts the containers in detached mode. |
+| `make build` | Rebuilds the images without starting the containers. |
+| `make start` | Starts existing containers. |
+| `make stop` | Stops running containers. |
+| `make down` | Stops and removes containers and networks. |
+| `make logs` | Displays real-time logs from all containers. |
+| `make ps` | Lists the status of the containers. |
+| `make clean` | Stops containers and removes data volumes (Requires sudo). |
+| `make fclean` | Deep clean: Removes containers, images, volumes, and networks. |
+
+To access the site, add the domain to your `/etc/hosts` file (if required by subject, e.g., `login.42.fr`):
+```bash
+127.0.0.1   mait-taj.42.fr
+```
+Then open your browser and visit: `https://mait-taj.42.fr` (Accept the self-signed certificate warning).
+
+---
+
+## 📂 Directory Structure
+
+```plaintext
+inception-now/
+├── Makefile                # Control center for building and starting services
+├── README.md               # Project documentation
+└── srcs/                   # Source files
+    ├── .env                # Environment variables (not committed)
+    ├── docker-compose.yml  # Container orchestration config
+    └── requirements/       # Service configurations
+        ├── mariadb/        # Database Dockerfile & scripts
+        ├── nginx/          # Web server Dockerfile & config
+        └── wordpress/      # WordPress Dockerfile & scripts
+```

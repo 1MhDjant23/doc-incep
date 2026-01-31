@@ -19,23 +19,9 @@ DEFAULT_ENV_PATH = /home/mait-taj/Desktop/.env
 #+++++++++++++++++++++++++++++++++++++++++#
 
 up: setup
-ifeq (${FILE_COUNT},1)
 	@echo "$(BLUE)${UNDERLINE}🚀 Starting containers...$(NC)"
 	@docker-compose -f ${COMPOSE_FILE} up -d
 	@echo "$(YELLOW)${UNDERLINE}✅ Inception project deployed!$(NC)"
-else
-	@echo "${RED}\`.env\` file not found:${NC}"
-	@echo "${YELLOW}You must create \`.env\` file inside 'srcs' folder${NC}"
-	@read -p "you want to use a default '.env' file?(y/n): " U_CHOICE; \
-	if [ "$$U_CHOICE" = "y" ] || [ "$$U_CHOICE" = "Y" ] || [ "$$U_CHOICE" = "yes" ]; then \
-		if [ -f ${DEFAULT_ENV_PATH} ]; then \
-			cp ${DEFAULT_ENV_PATH} srcs/.env; \
-			echo "✅${YELLOW} default '.env' file copied!${NC}"; \
-		else \
-			echo "Oops❕❗️ ${RED}can't find default '.env' file.${NC}"; \
-		fi \
-	fi
-endif
 
 build:
 	@echo "$(BLUE)>>> Building images...$(NC)"
